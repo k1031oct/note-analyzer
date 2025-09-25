@@ -203,7 +203,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ isDarkMode, toggleDa
   };
 
   return (
-    <div>
+    <div onClick={(e) => e.stopPropagation()}>
       <h1>設定</h1>
       <div className="settings-tabs">
         <button onClick={() => setActiveTab('profile')} className={activeTab === 'profile' ? 'active' : ''}>プロフィール</button>

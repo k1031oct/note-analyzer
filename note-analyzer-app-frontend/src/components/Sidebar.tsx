@@ -21,7 +21,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, d
   return (
     <div className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
-        <h2 className="logo-text">N+ analyzer</h2>
+        <h2 className="logo-text" onClick={() => setCurrentPage('dashboard')} style={{ cursor: 'pointer' }}>N+ analyzer</h2>
         <button className="toggle-button" onClick={() => setIsSidebarOpen(false)}>
           ×
         </button>
