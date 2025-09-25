@@ -47,7 +47,7 @@ const RateDonutChart = ({ rate, title }: { rate: number, title: string }) => {
     return (
         <div style={{ width: '45%', textAlign: 'center' }}>
             <h5 style={{ marginBottom: '10px' }}>{title}</h5>
-            <ResponsiveContainer width="100%" height={150}>
+            <ResponsiveContainer width="100%" height={150} debounce={1}>
                 <PieChart>
                     <Pie
                         data={data}
@@ -71,10 +71,13 @@ const RateDonutChart = ({ rate, title }: { rate: number, title: string }) => {
     );
 };
 
-const Dashboard: React.FC = React.memo(() => {
+interface DashboardPageProps {
+  setCurrentPage: (page: string) => void;
+}
+
+export const DashboardPage: React.FC<DashboardPageProps> = React.memo(({ setCurrentPage }) => {
     const {
         allArticles,
-        setActiveModal,
         dashboardArticles,
         classifications,
         secondaryClassifications,
@@ -99,14 +102,15 @@ const Dashboard: React.FC = React.memo(() => {
     const pipelineMargin = isMobile ? { top: 20, right: 80, bottom: 20, left: 20 } : { top: 20, right: 150, bottom: 20, left: 60 };
     const pipelineYAxisWidth = isMobile ? 60 : 80;
 
-    const [isGraphSectionVisible, setIsGraphSectionVisible] = useState(true);
     const [isKpiVisible, setIsKpiVisible] = useState(true);
+    const [isPipelineChartVisible, setIsPipelineChartVisible] = useState(true);
     const [isArticleDeltaVisible, setIsArticleDeltaVisible] = useState(true);
+    const [isGraphSectionVisible, setIsGraphSectionVisible] = useState(false);
+    
     const [isLineChartVisible, setIsLineChartVisible] = useState(true);
     const [isBarChartVisible, setIsBarChartVisible] = useState(true);
     const [isPieChartVisible, setIsPieChartVisible] = useState(true);
     const [isLikeRateChartVisible, setIsLikeRateChartVisible] = useState(true);
-    const [isPipelineChartVisible, setIsPipelineChartVisible] = useState(true);
 
     const lineChartAllKeys = [
         { dataKey: 'noteビュー', name: 'noteビュー' },
@@ -162,9 +166,9 @@ const Dashboard: React.FC = React.memo(() => {
     if (allArticles.length === 0) {
         return (
             <div className="card" style={{ textAlign: 'center', padding: '40px' }}>
-                <h2>ようこそ、note analyzerへ！</h2>
+                <h2>ようこそ、N+ analyzerへ！</h2>
                 <p style={{ margin: '20px 0' }}>まずはあなたのnoteのデータを読み込み、分析を始めましょう。</p>
-                <button onClick={() => setActiveModal('dataImport')}>
+                <button onClick={() => setCurrentPage('dataImport')}>
                     データを読み込む
                 </button>
             </div>
@@ -247,7 +251,7 @@ const Dashboard: React.FC = React.memo(() => {
 
             <CollapsibleSection title="パイプライン分析" isVisible={isPipelineChartVisible} onToggle={() => setIsPipelineChartVisible(!isPipelineChartVisible)}>
                 <div className="chart-wrapper" style={{ height: 'auto' }}>
-                    <ResponsiveContainer width="100%" height={250}>
+                    <ResponsiveContainer width="100%" height={250} debounce={1}>
                         <BarChart
                             layout="vertical"
                             data={pipelineData}
@@ -284,7 +288,7 @@ const Dashboard: React.FC = React.memo(() => {
             </CollapsibleSection>
 
             <CollapsibleSection title="グラフ" isVisible={isGraphSectionVisible} onToggle={() => setIsGraphSectionVisible(!isGraphSectionVisible)}>
-                <div style={{paddingLeft: '20px', borderLeft: '2px solid var(--border-color)'}}>
+                <div>
                     <div className="chart-section" style={{padding: '10px 0', border: 'none'}}>
                         <h4 style={{cursor: 'default'}}>分類フィルター</h4>
                         <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', padding: '10px 0' }}>
@@ -307,7 +311,7 @@ const Dashboard: React.FC = React.memo(() => {
                         level={1}
                     >
                         <div className="chart-wrapper">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" debounce={1}>
                                 <LineChart data={lineChartData}>
                                     <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" stroke="var(--text-color)" tick={{ fontSize: 12 }} /><YAxis yAxisId="left" stroke={GRAPH_COLORS[0]} tick={{ fontSize: 12 }} /><YAxis yAxisId="right" orientation="right" stroke={GRAPH_COLORS[1]} tick={{ fontSize: 12 }} /><Tooltip wrapperStyle={tooltipStyle} /><Legend wrapperStyle={{ fontSize: '12px' }} />
                                     {lineChartVisibleKeys.includes('noteビュー') && <Line yAxisId="left" type="monotone" dataKey="noteビュー" stroke={GRAPH_COLORS[0]} dot={(props: any) => { const { cx, cy, payload, index } = props; return payload['noteビューIsSpike'] ? <circle key={`spike-${index}`} cx={cx} cy={cy} r={5} fill={SPIKE_COLOR} /> : <circle key={`dot-${index}`} cx={cx} cy={cy} r={3} fill="transparent" stroke="transparent" />; }} />}
@@ -327,7 +331,7 @@ const Dashboard: React.FC = React.memo(() => {
                         level={1}
                     >
                         <div className="chart-wrapper">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" debounce={1}>
                                 <BarChart data={categoryTotalData}>
                                     <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" stroke="var(--text-color)" tick={{ fontSize: 12 }} /><YAxis stroke="var(--text-color)" tick={{ fontSize: 12 }} /><Tooltip wrapperStyle={tooltipStyle} /><Legend wrapperStyle={{ fontSize: '12px' }} />
                                     {barChartVisibleKeys.includes('noteViews') && <Bar dataKey="noteViews" name="noteビュー" fill={GRAPH_COLORS[0]}>
@@ -383,7 +387,7 @@ const Dashboard: React.FC = React.memo(() => {
                         level={1}
                     >
                         <div className="chart-wrapper">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" debounce={1}>
                                 <PieChart>
                                     <Pie data={filteredPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} fill="#8884d8" labelLine={false} label={renderCustomizedLabel}>
                                         {filteredPieData.map((_, index) => (<Cell key={`cell-${index}`} fill={GRAPH_COLORS[index % GRAPH_COLORS.length]} />))}
@@ -402,7 +406,7 @@ const Dashboard: React.FC = React.memo(() => {
                         level={1}
                     >
                         <div className="chart-wrapper">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" debounce={1}>
                                 <BarChart data={filteredLikeRateData}>
                                     <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" stroke="var(--text-color)" tick={{ fontSize: 12 }} /><YAxis stroke="var(--text-color)" tick={{ fontSize: 12 }} tickFormatter={PercentageFormatter} /><Tooltip wrapperStyle={tooltipStyle} formatter={PercentageFormatter} /><Legend wrapperStyle={{ fontSize: '12px' }} />
                                     <Bar dataKey="スキ率" fill={GRAPH_COLORS[0]} />
@@ -415,5 +419,3 @@ const Dashboard: React.FC = React.memo(() => {
         </div>
     );
 });
-
-export default Dashboard;

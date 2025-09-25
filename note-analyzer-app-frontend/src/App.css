@@ -11,9 +11,11 @@
   /* Light Theme */
   --background-color: #f8f9fa;
   --text-color: #343a40;
-  --primary-color: #007bff; /* 標準的な青 */
-  --primary-rgb: 0, 123, 255;
-  --button-text-color: #ffffff;
+  --primary-color: #ced4da; /* さらに薄いグレー */
+  --primary-rgb: 206, 212, 218;
+  --button-text-color: #212529; /* 濃い文字色 */
+  --button-background-color: #f0f8ff; /* 薄く淡い水色 */
+  --danger-background-color: #f8d7da; /* 薄く淡い赤色 */
   --secondary-color: #e9ecef; /* Lighter grey for table header */
   --table-header-text-color: #343a40; /* Dark text for light header */
   --border-color: #dee2e6;
@@ -25,23 +27,30 @@
 }
 
 [data-theme="dark"] {
-  /* Dark Theme */
-  --background-color: #212529;
-  --text-color: #e9ecef;
-  --primary-color: #007bff; /* Light blue */
-  --button-text-color: #ffffff; /* Dark text for better contrast */
-  --secondary-color: #343a40; /* Darker grey for table header */
-  --border-color: #495057;
-  --card-background: #2c3034;
-  --input-background: #343a40;
-  --input-border: #495057;
-  --plus-color: #28a745;
-  --minus-color: #dc3545;
+  /* Dark Theme (Material Design Inspired) */
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --primary-color: #bb86fc; /* Accent color */
+  --primary-rgb: 187, 134, 252;
+  --button-text-color: #ffffff;
+  --button-background-color: rgba(187, 134, 252, 0.15); /* Accent with alpha */
+  --danger-background-color: rgba(207, 102, 121, 0.2);
+  --secondary-color: #373737;
+  --table-header-text-color: #ffffff;
+  --border-color: #2c2c2c;
+  --card-background: #1e1e1e;
+  --input-background: #2c2c2c;
+  --input-border: #373737;
+  --plus-color: #4caf50;
+  --minus-color: #cf6679;
+  --accent-color: #03dac6;
+  --accent-hover-color: rgba(3, 218, 198, 0.1);
 }
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background-color);
@@ -69,7 +78,7 @@ button {
   cursor: pointer;
   border-radius: 6px;
   border: 1px solid transparent;
-  background-color: var(--primary-color);
+  background-color: var(--button-background-color);
   color: var(--button-text-color);
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
   font-weight: 500;
@@ -85,24 +94,23 @@ button:disabled {
 }
 
 .button-secondary {
-  background-color: transparent;
-  border-color: var(--border-color);
-  color: var(--text-color);
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: var(--button-text-color);
 }
 
 .button-secondary:hover:not(:disabled) {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
+  filter: brightness(0.95);
 }
 
 [data-theme="dark"] .button-secondary {
-  border-color: var(--border-color);
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
   color: var(--text-color);
 }
 
 [data-theme="dark"] .button-secondary:hover:not(:disabled) {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
+  filter: brightness(1.2);
 }
 
 .icon-button {
@@ -424,17 +432,23 @@ table th {
 }
 
 .delete-button {
-  margin-left: 10px;
-  padding: 2px 8px;
-  font-size: 12px;
-  background-color: transparent;
-  border-color: var(--minus-color);
-  color: var(--minus-color);
+  background-color: var(--danger-background-color);
+  border-color: var(--danger-background-color);
+  color: var(--button-text-color);
 }
 
 .delete-button:hover:not(:disabled) {
-    background-color: var(--minus-color);
-    color: var(--button-text-color);
+    filter: brightness(0.95);
+}
+
+[data-theme="dark"] .delete-button {
+  background-color: var(--danger-background-color);
+  border-color: var(--danger-background-color);
+  color: var(--minus-color);
+}
+
+[data-theme="dark"] .delete-button:hover:not(:disabled) {
+    filter: brightness(1.2);
 }
 
 /* New Settings Menu Styles */
@@ -597,4 +611,35 @@ table th {
 
 [data-theme="dark"] .inactive-article {
   background-color: #343a40; /* ダークテーマ用の薄いグレー */
+}
+
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  width: 100%;
+  transition: none; /* No longer needed */
+}
+
+/* Adjustments for login container */
+.login-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.open-sidebar-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    padding: 0;
 }

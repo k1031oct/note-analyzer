@@ -36,7 +36,7 @@ interface DataContextType {
     selectedSecondaryIds: string[];
     handlePrimaryFilterChange: (id: string) => void;
     handleSecondaryFilterChange: (id: string) => void;
-    handleExtractAndAddArticles: (text: string) => Promise<void>;
+    handleExtractAndAddArticles: (text: string) => Promise<boolean>;
     handleUpdateArticle: (id: string, updatedData: Partial<Article>) => Promise<void>;
     handleUpdateLatestSnapshot: (articleId: string, updatedData: { sales?: number }) => Promise<void>;
     handleAddClassification: (name: string) => Promise<void>;
@@ -50,8 +50,7 @@ interface DataContextType {
     isFetchingXData: boolean;
     isXConnected: boolean;
     fetchAllData: () => Promise<void>;
-    activeModal: string | null;
-    setActiveModal: (modalName: string | null) => void;
+
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -61,7 +60,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     const [allArticles, setAllArticles] = useState<Article[]>([]);
     const [isFetchingXData, setIsFetchingXData] = useState(false);
     const [isXConnected, setIsXConnected] = useState(false);
-    const [activeModal, setActiveModal] = useState<string | null>(null);
+
 
     const [startDate, setStartDate] = useState(() => {
         const date = new Date();
@@ -181,15 +180,17 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => { fetchAllData(); }, [fetchAllData]);
 
-    const handleExtractAndAddArticles = useCallback(async (notePastedText: string) => {
-        if (!notePastedText || !user) return alert("テキストが空か、ログインしていません。");
+    const handleExtractAndAddArticles = useCallback(async (notePastedText: string): Promise<boolean> => {
+        if (!notePastedText || !user) {
+            console.error("テキストが空か、ログインしていません。");
+            return false;
+        }
 
         try {
             const lines = notePastedText.trim().split('\n');
             const articlesData = [];
             const skippedTitles = [];
 
-            // ヘッダー行をスキップ
             let startIndex = 0;
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].includes('記事\tビュー')) {
@@ -202,26 +203,21 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
                 const titleLine = lines[i]?.trim();
                 const statsLine = lines[i + 1]?.trim();
 
-                if (!titleLine || !statsLine) {
-                    continue;
-                }
+                if (!titleLine || !statsLine) continue;
 
                 const statsParts = statsLine.split('\t');
                 if (statsParts.length === 3 && statsParts.every(p => !isNaN(parseInt(p.replace(/,/g, ''), 10)))) {
                     const title = titleLine;
                     const [views, comments, likes] = statsParts.map(p => parseInt(p.replace(/,/g, ''), 10));
-                    articlesData.push({ url: '', title, views, comments, likes }); // URLは後で検索または空で登録
+                    articlesData.push({ url: '', title, views, comments, likes });
                 } else {
                     skippedTitles.push(titleLine);
                 }
             }
 
             if (articlesData.length === 0) {
-                let alertMessage = "処理できる記事データが見つかりませんでした。フォーマットを確認してください。\n";
-                if(skippedTitles.length > 0) {
-                    alertMessage += `スキップされた記事タイトル:\n${skippedTitles.join('\n')}`;
-                }
-                return alert(alertMessage);
+                console.error("処理できる記事データが見つかりませんでした。");
+                return false;
             }
 
             const today = formatDate(new Date());
@@ -229,55 +225,34 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
             for (const articleData of articlesData) {
                 let articleId;
-                let articleUrl = ''; // URLはフォーマットに含まれないため、初期値は空
-
-                // 記事タイトルで既存記事を検索
                 const q = query(articlesCollectionRef, where("title", "==", articleData.title), where("authorId", "==", user.uid));
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    // 既存記事が見つからない場合、新規記事として登録
                     const newArticleRef = await addDoc(articlesCollectionRef, {
-                        authorId: user.uid,
-                        url: articleUrl, // URLは空で登録
-                        title: articleData.title,
-                        publicationDate: serverTimestamp(),
-                        classificationId: "",
-                        secondaryClassificationId: "",
-                        createdAt: serverTimestamp(),
+                        authorId: user.uid, url: '', title: articleData.title,
+                        publicationDate: serverTimestamp(), classificationId: "",
+                        secondaryClassificationId: "", createdAt: serverTimestamp(),
                     });
                     articleId = newArticleRef.id;
-                    alert(`新しい記事「${articleData.title}」を登録しました。URLが空のため、Xデータ連携はできません。`);
                 } else {
-                    // 既存記事が見つかった場合、その記事を更新
                     articleId = querySnapshot.docs[0].id;
-                    articleUrl = querySnapshot.docs[0].data().url; // 既存のURLを取得
                     await updateDoc(doc(db, "articles", articleId), { title: articleData.title });
                 }
 
                 const snapshotRef = doc(db, "articles", articleId, "daily_snapshots", today);
-                await setDoc(snapshotRef, {
-                    note_data: {
-                        views: articleData.views,
-                        likes: articleData.likes,
-                        comments: articleData.comments,
-                    },
+                await setDoc(snapshotRef, { 
+                    note_data: { views: articleData.views, likes: articleData.likes, comments: articleData.comments },
                     fetchedAt: serverTimestamp()
                 }, { merge: true });
             }
 
-            let alertMessage = `${articlesData.length}件の記事データを処理しました。\n`;
-            if (skippedTitles.length > 0) {
-                 alertMessage += `スキップされた記事タイトル:\n${skippedTitles.slice(0, 5).join('\n')}`;
-                 if(skippedTitles.length > 5) alertMessage += '\n...';
-            }
-            alert(alertMessage);
-
             await fetchAllData();
+            return true;
 
         } catch (error) {
             console.error("記事の抽出と追加でエラーが発生しました:", error);
-            alert("記事の処理中にエラーが発生しました。コンソールのエラーメッセージを確認してください。");
+            return false;
         }
     }, [user, fetchAllData]);
 
@@ -363,7 +338,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         handleAddClassification, handleAddSecondaryClassification,
         handleDeleteClassification, handleDeleteSecondaryClassification, handleAddKpi, handleDeleteKpi, 
         handleFileUpload, handleFetchXData, isFetchingXData, isXConnected, fetchAllData,
-        activeModal, setActiveModal
+
     };
 
     return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

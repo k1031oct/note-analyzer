@@ -1,0 +1,34 @@
+.import-section:first-child {
+  padding-top: 0;
+}
+
+.import-section {
+  padding: 20px 0;
+}
+
+.import-content {
+  padding-left: 20px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0;
+}
+
+.success-message {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  border-radius: 8px;
+  color: #155724;
+}
+
+[data-theme="dark"] .success-message {
+  color: #a3e9a4;
+}
+
+.success-message button {
+  margin-top: 10px;
+}

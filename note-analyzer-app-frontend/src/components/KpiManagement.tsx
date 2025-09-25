@@ -43,42 +43,44 @@ export const KpiManagement: React.FC<KpiManagementProps> = ({ kpis, onAddKpi, on
   return (
     <>
       <h3>KPI設定</h3>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="KPI名 (例: 月間目標PV)"
-          value={kpiName}
-          onChange={(e) => setKpiName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="数式 (例: note_data.views >= 1000)"
-          value={expression}
-          onChange={(e) => setExpression(e.target.value)}
-          style={{ width: '300px' }}
-          list="formula-hints"
-        />
-        <datalist id="formula-hints">
-          {formulaHints.map(hint => <option key={hint} value={hint.match(/\(([^)]+)\)/)?.[1] || hint} >{hint}</option>)}
-        </datalist>
-        <input
-          type="number"
-          placeholder="目標値"
-          value={targetValue}
-          onChange={(e) => setTargetValue(Number(e.target.value))}
-        />
-        <button type="submit" className="button-secondary">KPIを追加</button>
-      </form>
-      <div>
-        <h4>設定済みKPI一覧</h4>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {kpis.map(kpi => (
-            <li key={kpi.id} style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>{kpi.kpiName} (数式: {kpi.expression}) : {kpi.targetValue.toLocaleString()}</span>
-              <button onClick={() => onDeleteKpi(kpi.id)} className="delete-button" style={{ margin: 0 }}>削除</button>
-            </li>
-          ))}
-        </ul>
+      <div style={{ paddingLeft: '20px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <input
+            type="text"
+            placeholder="KPI名 (例: 月間目標PV)"
+            value={kpiName}
+            onChange={(e) => setKpiName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="数式 (例: note_data.views >= 1000)"
+            value={expression}
+            onChange={(e) => setExpression(e.target.value)}
+            style={{ width: '300px' }}
+            list="formula-hints"
+          />
+          <datalist id="formula-hints">
+            {formulaHints.map(hint => <option key={hint} value={hint.match(/\(([^)]+)\)/)?.[1] || hint} >{hint}</option>)}
+          </datalist>
+          <input
+            type="number"
+            placeholder="目標値"
+            value={targetValue}
+            onChange={(e) => setTargetValue(Number(e.target.value))}
+          />
+          <button type="submit" className="button-secondary">KPIを追加</button>
+        </form>
+        <div>
+          <p style={{ marginTop: '20px', fontWeight: 'bold', color: 'var(--text-color)' }}>設定済みKPI一覧</p>
+          <ul style={{ listStyle: 'none', padding: 0, marginTop: '15px' }}>
+            {kpis.map(kpi => (
+              <li key={kpi.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-color)' }}>
+                <span>{kpi.kpiName} (数式: {kpi.expression}) : {kpi.targetValue.toLocaleString()}</span>
+                <button onClick={() => onDeleteKpi(kpi.id)} className="delete-button">削除</button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );

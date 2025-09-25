@@ -1,0 +1,11 @@
+# Build output
+note-analyzer-app-frontend/dist
+note-analyzer-app/dist
+
+# Dependencies
+note-analyzer-app-frontend/node_modules
+note-analyzer-app/functions/node_modules
+
+# Env files
+.env
+.env.local

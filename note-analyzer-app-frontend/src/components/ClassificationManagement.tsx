@@ -36,11 +36,11 @@ export const ClassificationManagement: React.FC<ClassificationManagementProps> =
                         <input type="text" placeholder="新しい1次分類名" value={tagName} onChange={(e) => setTagName(e.target.value)} />
                         <button type="submit" className="button-secondary">1次分類を追加</button>
                     </form>
-                    <h5>登録済み</h5>
-                    <ul>
+                    <p style={{ marginTop: '20px', fontWeight: 'bold', color: 'var(--text-color)' }}>登録済み</p>
+                    <ul style={{ listStyle: 'none', padding: 0, marginTop: '15px' }}>
                         {classifications.map(tag => (
-                            <li key={tag.id}>
-                                {tag.name}
+                            <li key={tag.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-color)' }}>
+                                <span>{tag.name}</span>
                                 <button onClick={() => handleDeleteClassification(tag.id)} className="delete-button">削除</button>
                             </li>
                         ))}
@@ -52,11 +52,11 @@ export const ClassificationManagement: React.FC<ClassificationManagementProps> =
                         <input type="text" placeholder="新しい2次分類名" value={secondaryTagName} onChange={(e) => setSecondaryTagName(e.target.value)} />
                         <button type="submit" className="button-secondary">2次分類を追加</button>
                     </form>
-                    <h5>登録済み</h5>
-                    <ul>
+                    <p style={{ marginTop: '20px', fontWeight: 'bold', color: 'var(--text-color)' }}>登録済み</p>
+                    <ul style={{ listStyle: 'none', padding: 0, marginTop: '15px' }}>
                         {secondaryClassifications.map(tag => (
-                            <li key={tag.id}>
-                                {tag.name}
+                            <li key={tag.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--border-color)' }}>
+                                <span>{tag.name}</span>
                                 <button onClick={() => handleDeleteSecondaryClassification(tag.id)} className="delete-button">削除</button>
                             </li>
                         ))}
