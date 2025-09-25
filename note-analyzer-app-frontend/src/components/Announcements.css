@@ -1,0 +1,247 @@
+/* src/components/Announcements.css */
+
+.announcement-icon {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: lightblue; /* 不透明な淡い水色 */
+  color: var(--button-text-color); /* アイコンの色を白に戻す */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  z-index: 999;
+}
+
+.announcement-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.announcement-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--minus-color);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  border: 2px solid var(--background-color);
+}
+
+.announcements-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0; /* 初期状態は非表示 */
+  pointer-events: none; /* クリックイベントを無効化 */
+  transition: opacity 0.3s ease-out; /* 透明度のトランジション */
+}
+
+.announcements-modal-overlay.open {
+  opacity: 1; /* 開いたときに表示 */
+  pointer-events: auto; /* クリックイベントを有効化 */
+}
+
+.announcements-modal-content {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  height: 80vh;
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  /* アニメーションの初期状態 */
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: center center; /* 中央から広がるように */
+}
+
+.announcements-modal-content.open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.announcements-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.announcements-modal-header h3 {
+  margin: 0;
+  font-size: 1.3em;
+}
+
+.announcements-modal-close-button {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.announcements-modal-close-button:hover {
+  opacity: 1;
+}
+
+.announcements-modal-body {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.announcements-list {
+  width: 35%;
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.announcement-list-item {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.announcement-list-item:last-child {
+  border-bottom: none;
+}
+
+.announcement-list-item:hover {
+  background-color: var(--secondary-color);
+}
+
+.announcement-list-item.selected {
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+.announcement-list-item h5 {
+  margin: 0 0 5px 0;
+  font-size: 1em;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-list-item p {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.unread-dot {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.announcement-detail {
+  width: 65%;
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.announcement-detail h4 {
+  margin-top: 0;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.announcement-detail-meta {
+  font-size: 0.9em;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.announcement-detail-content {
+  line-height: 1.7;
+}
+
+.announcement-detail-content h4 {
+    font-size: 1.1em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.announcement-detail-content ul {
+    padding-left: 20px;
+}
+
+.announcement-detail-content li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .announcements-modal-body {
+    flex-direction: column;
+  }
+  .announcements-list {
+    width: 100%;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .announcement-detail {
+    width: 100%;
+    height: 60%;
+  }
+  .announcement-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    bottom: 20px;
+    right: 20px;
+  }
+  .announcement-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}

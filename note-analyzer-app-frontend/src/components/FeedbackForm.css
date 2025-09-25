@@ -1,0 +1,71 @@
+/* src/components/FeedbackForm.css */
+
+.feedback-form-container {
+  padding: 20px;
+}
+
+.feedback-form-container .form-group {
+  margin-bottom: 15px;
+}
+
+.feedback-form-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.feedback-form-container input[type="text"],
+.feedback-form-container input[type="email"],
+.feedback-form-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  font-size: 14px;
+  box-sizing: border-box; /* パディングとボーダーを幅に含める */
+}
+
+.feedback-form-container input[type="text"]:disabled,
+.feedback-form-container input[type="email"]:disabled,
+.feedback-form-container textarea:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+.feedback-form-container .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.feedback-form-container .feedback-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.feedback-form-container .feedback-message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.feedback-form-container .feedback-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .feedback-form-container .feedback-message.success {
+  background-color: #1c4a20;
+  color: #d4edda;
+}
+
+[data-theme="dark"] .feedback-form-container .feedback-message.error {
+  background-color: #5c1a1f;
+  color: #f8d7da;
+}

@@ -1,0 +1,40 @@
+/* index.css - Minimal base styles */
+body {
+    margin: 0;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.group-header {
+    text-align: center;
+    background-color: var(--group-header-bg-color, #f0f0f0); /* デフォルトの薄いグレー */
+}
+
+.note-group-header {
+    background-color: var(--note-group-bg-color, #e0f7fa); /* 薄い水色 */
+}
+
+.x-api-group-header {
+    background-color: var(--x-api-group-bg-color, #fff3e0); /* 薄いオレンジ */
+}
+
+.x-csv-group-header {
+    background-color: var(--x-csv-group-bg-color, #e8f5e9); /* 薄い緑色 */
+}
+
+.note-group-cell {
+    background-color: var(--note-group-cell-bg-color, #f0f8fa); /* 薄い水色 */
+}
+
+.x-api-group-cell {
+    background-color: var(--x-api-group-cell-bg-color, #fffaf0); /* 薄いオレンジ */
+}
+
+.x-csv-group-cell {
+    background-color: var(--x-csv-group-cell-bg-color, #f0fff0); /* 薄い緑色 */
+}

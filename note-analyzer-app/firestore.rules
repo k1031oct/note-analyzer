@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // users, classifications, secondary_classifications のルールは変更なし
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /classifications/{classificationId} {
+      allow read, list: if request.auth != null;
+      allow create, update: if request.auth.uid == request.resource.data.authorId;
+      allow delete: if request.auth.uid == resource.data.authorId;
+    }
+    match /secondary_classifications/{secondaryId} {
+      allow read, list: if request.auth != null;
+      allow create, update: if request.auth.uid == request.resource.data.authorId;
+      allow delete: if request.auth.uid == resource.data.authorId;
+    }
+
+    // articlesコレクションのルール
+    match /articles/{articleId} {
+      allow read, list: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == request.resource.data.authorId;
+
+      // ★★★ ここからが最終的な修正 ★★★
+      match /daily_snapshots/{snapshotId} {
+        allow read, list: if request.auth != null;
+
+        // 新規作成時：ログインしていれば許可。
+        // (親のarticle作成時にauthorIdがチェックされるので、ここでは不要)
+        allow create: if request.auth != null;
+
+        // 更新・削除時：親ドキュメントの所有者のみに許可
+        allow update, delete: if request.auth != null && get(/databases/$(database)/documents/articles/$(articleId)).data.authorId == request.auth.uid;
+      }
+    }
+    // KPIコレクションのルール
+    match /kpis/{kpiId} {
+      allow read, list: if request.auth != null && request.auth.uid == resource.data.authorId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.authorId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.authorId;
+    }
+    // feedback コレクションへの書き込みを認証済みユーザーに許可
+    match /feedback/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
