@@ -27,4 +27,4 @@ initializeAppCheck(app, {
 // 他のファイルで使えるように、各機能をエクスポート
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const functions = getFunctions(app, "us-central1");
+export const functions = getFunctions(app, "asia-northeast1");

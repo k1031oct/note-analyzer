@@ -2,6 +2,23 @@ import type { Announcement } from '../types';
 
 export const announcementsData: Announcement[] = [
   {
+    id: 'v2.3-update',
+    version: 'v2.3',
+    date: '2025-09-26',
+    title: 'UIの改善と不具合修正',
+    content: (
+      <>
+        <h4>UIの改善と不具合修正を行いました</h4>
+        <p>より快適にご利用いただくため、以下のアップデートを行いました。</p>
+        <ul>
+          <li><strong>ローディング表現の改善:</strong> ページ全体およびボタンのローディング表現を、より分かりやすいスピナーアニメーションに変更しました。</li>
+          <li><strong>サイドバーの挙動修正:</strong> 設定ページで、サイドバーの外側をクリックしてもサイドバーが閉じるように、他のページと挙動を統一しました。</li>
+        </ul>
+        <p>今後ともN+ analyzerをよろしくお願いいたします。</p>
+      </>
+    ),
+  },
+  {
     id: 'v2.2-update',
     version: 'v2.2',
     date: '2025-09-25', // 今日の日付

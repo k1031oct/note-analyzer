@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useCallback, type ReactNode, useEffect, useMemo } from 'react';
 import { collection, query, where, getDocs, doc, updateDoc, serverTimestamp, addDoc, deleteDoc, setDoc, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { db } from '../firebase';
+import { httpsCallable } from "firebase/functions";
+import { db, functions } from '../firebase';
 import { useAuth } from './AuthContext';
 import { useFirestoreQuery } from '../hooks/useFirestore';
 import { useInsightfulData } from '../hooks/useInsightfulData';
@@ -124,7 +124,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     const checkXConnection = useCallback(async () => {
         if (!user) return setIsXConnected(false);
         try {
-            const functions = getFunctions();
             const isXConnectedCallable = httpsCallable(functions, 'isXConnected');
             const result = await isXConnectedCallable();
             setIsXConnected((result.data as { isConnected: boolean }).isConnected);

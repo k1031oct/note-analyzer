@@ -111,7 +111,11 @@ function App() {
   };
 
   if (loading) {
-    return <div className="loading-container">読み込み中...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
   }
 
   const handleContentClick = () => {

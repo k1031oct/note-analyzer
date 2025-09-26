@@ -4,17 +4,16 @@
  * ===================================================================
  */
 
-import { onRequest, HttpsError } from "firebase-functions/v2/https";
+import { onRequest } from "firebase-functions/v2/https";
 import { onObjectFinalized } from "firebase-functions/v2/storage";
 import { onCall } from "firebase-functions/v2/https";
 import { setGlobalOptions, logger } from "firebase-functions/v2";
 import * as admin from "firebase-admin";
 import {parse} from "csv-parse/sync";
-import {GoogleGenerativeAI} from "@google/generative-ai";
 
 admin.initializeApp();
 
-setGlobalOptions({ secrets: ["X_CLIENT_ID", "X_CLIENT_SECRET", "GEMINI_API_KEY"] });
+setGlobalOptions({ region: "asia-northeast1", secrets: ["X_CLIENT_ID", "X_CLIENT_SECRET"] });
 
 const db = admin.firestore();
 const storage = admin.storage();
@@ -282,39 +281,6 @@ export const onCsvUpload = onObjectFinalized(async (event) => {
   logger.info("[onCsvUpload] Batch commit complete.");
 });
 
-
-// ■■■ 3. AI分析 ■■■
-export const getAiAnalysis = onCall(async (request) => {
-  if (!request.auth) {
-    throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-  }
-  const text = request.data.text;
-  if (!text) {
-    throw new HttpsError("invalid-argument", "分析対象のテキストがありません。");
-  }
-  const geminiApiKey = process.env.GEMINI_API_KEY;
-  if (!geminiApiKey) {
-    throw new HttpsError("internal", "サーバー側でエラーが発生しました。");
-  }
-  try {
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
-    const prompt = `あなたはプロのコンテンツコンサルタントです。
-以下のnoteの記事タイトルリストについて、クリエイターの強みや読者の傾向を分析し、
-次に行うべき具体的なアクションを3つ提案してください。
-
-記事タイトルリスト:
----
-${text}
----
-`;
-    const result = await model.generateContent(prompt);
-    return {result: (result.response as any).text};
-  } catch (error) {
-    logger.error("Gemini APIエラー:", error);
-    throw new HttpsError("internal", "AIの分析中にエラーが発生しました。");
-  }
-});
 
 // ■■■ 4. X OAuth ■■■
 export const oauthCallback = onRequest(async (req, res) => {

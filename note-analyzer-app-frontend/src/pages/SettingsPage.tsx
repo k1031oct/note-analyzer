@@ -81,8 +81,8 @@ const ProfileSettings = () => {
             </p>
           )}
           <div className="form-actions">
-            <button onClick={handleSave} disabled={isSaving}>
-              {isSaving ? '保存中...' : '保存'}
+            <button onClick={handleSave} disabled={isSaving} style={{ minWidth: '80px', minHeight: '38px' }}>
+              {isSaving ? <div className="button-spinner"></div> : '保存'}
             </button>
             <button type="button" onClick={() => setIsEditModalOpen(false)} className="button-secondary" disabled={isSaving}>
               キャンセル
@@ -203,7 +203,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ isDarkMode, toggleDa
   };
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
+    <div>
       <h1>設定</h1>
       <div className="settings-tabs">
         <button onClick={() => setActiveTab('profile')} className={activeTab === 'profile' ? 'active' : ''}>プロフィール</button>

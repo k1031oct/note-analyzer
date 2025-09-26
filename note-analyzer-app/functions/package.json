@@ -15,7 +15,6 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "csv-parse": "^6.1.0",
     "firebase-admin": "11.11.1",
     "firebase-functions": "^6.4.0"
