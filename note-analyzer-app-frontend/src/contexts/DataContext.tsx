@@ -46,10 +46,7 @@ interface DataContextType {
     handleAddKpi: (kpi: Omit<Kpi, 'id' | 'authorId' | 'createdAt'>) => Promise<void>;
     handleDeleteKpi: (kpiId: string) => Promise<void>;
     handleFileUpload: (file: File) => Promise<void>;
-    handleFetchXData: () => Promise<void>;
-    isFetchingXData: boolean;
-    isXConnected: boolean;
-    fetchAllData: () => Promise<void>;
+
 
 }
 
@@ -58,8 +55,7 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const DataProvider = ({ children }: { children: ReactNode }) => {
     const { user } = useAuth();
     const [allArticles, setAllArticles] = useState<Article[]>([]);
-    const [isFetchingXData, setIsFetchingXData] = useState(false);
-    const [isXConnected, setIsXConnected] = useState(false);
+
 
 
     const [startDate, setStartDate] = useState(() => {
@@ -121,19 +117,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         );
     };
 
-    const checkXConnection = useCallback(async () => {
-        if (!user) return setIsXConnected(false);
-        try {
-            const isXConnectedCallable = httpsCallable(functions, 'isXConnected');
-            const result = await isXConnectedCallable();
-            setIsXConnected((result.data as { isConnected: boolean }).isConnected);
-        } catch (error) {
-            console.error("X接続状態のチェックエラー:", error);
-            setIsXConnected(false);
-        }
-    }, [user]);
 
-    useEffect(() => { checkXConnection(); }, [checkXConnection]);
 
     const fetchAllData = useCallback(async () => {
         if (!user) return setAllArticles([]);
@@ -311,18 +295,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             alert(`アップロードエラー: ${error instanceof Error ? error.message : String(error)}`);
         }
     }, [user, fetchAllData]);
-    const handleFetchXData = useCallback(async () => {
-        if (!user) return;
-        setIsFetchingXData(true);
-        try {
-            const url = `${import.meta.env.VITE_FETCH_X_DATA_URL}?uid=${user.uid}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`サーバーエラー: ${response.status}`);
-            alert("速報値の取得リクエストを送信しました。データの反映には少し時間がかかります。");
-            await fetchAllData();
-        } catch (error) { console.error("速報値の取得エラー:", error); } 
-        finally { setIsFetchingXData(false); }
-    }, [user, fetchAllData]);
+
 
     const value = {
         allArticles, dashboardArticles, lineChartData, categoryTotalData,
@@ -336,7 +309,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         handleExtractAndAddArticles, handleUpdateArticle, handleUpdateLatestSnapshot,
         handleAddClassification, handleAddSecondaryClassification,
         handleDeleteClassification, handleDeleteSecondaryClassification, handleAddKpi, handleDeleteKpi, 
-        handleFileUpload, handleFetchXData, isFetchingXData, isXConnected, fetchAllData,
+        handleFileUpload, fetchAllData,
 
     };
 

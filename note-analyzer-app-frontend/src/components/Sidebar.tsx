@@ -42,7 +42,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setCurrentPage, d
       </nav>
       <div className="sidebar-footer">
         <div className="user-profile">
-          <span className="nav-label">{displayName || 'ゲスト'}</span>
+          <div className="user-profile-label">ログインユーザー:</div>
+          <div className="user-profile-name">{displayName || 'ゲスト'}</div>
         </div>
         <button onClick={onLogout} className="logout-button">
           <span className="nav-label">ログアウト</span>

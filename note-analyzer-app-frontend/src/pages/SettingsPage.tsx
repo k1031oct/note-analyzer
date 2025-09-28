@@ -53,10 +53,18 @@ const ProfileSettings = () => {
     <div>
       <h3>プロフィール</h3>
       <div className="profile-info">
-        <p><strong>表示名:</strong> {user.displayName || '未設定'}</p>
-        <p><strong>メールアドレス:</strong> {user.email}</p>
-        <p><strong>アカウント作成日:</strong> {user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : '不明'}</p>
-        <p><strong>最終ログイン日:</strong> {user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime).toLocaleDateString() : '不明'}</p>
+        <div className="profile-info-item">
+          <p><strong>表示名:</strong> {user.displayName || '未設定'}</p>
+        </div>
+        <div className="profile-info-item">
+          <p><strong>メールアドレス:</strong> {user.email}</p>
+        </div>
+        <div className="profile-info-item">
+          <p><strong>アカウント作成日:</strong> {user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : '不明'}</p>
+        </div>
+        <div className="profile-info-item">
+          <p><strong>最終ログイン日:</strong> {user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime).toLocaleDateString() : '不明'}</p>
+        </div>
       </div>
       <div style={{ textAlign: 'right', marginTop: '15px' }}>
         <button onClick={() => setIsEditModalOpen(true)} className="button-primary">編集</button>
@@ -150,12 +158,14 @@ const DisplaySettings: React.FC<{ isDarkMode: boolean; toggleDarkMode: () => voi
   return (
     <div>
       <h3>表示設定</h3>
-      <div className="setting-item">
-        <span>表示モード</span>
-        <label className="toggle-switch">
-          <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
-          <span className="slider round"></span>
-        </label>
+      <div className="display-settings-content">
+        <div className="setting-item">
+          <span>表示モード</span>
+          <label className="toggle-switch">
+            <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
+            <span className="slider round"></span>
+          </label>
+        </div>
       </div>
     </div>
   );
@@ -168,9 +178,11 @@ const OtherSettings = () => {
   return (
     <div>
       <h3>その他</h3>
-      <div className="setting-item">
-        <span>お問い合わせ・ご要望</span>
-        <button onClick={() => setIsFeedbackModalOpen(true)} className="button-secondary">フォームを開く</button>
+      <div className="other-settings-content">
+        <div className="setting-item">
+          <span>お問い合わせ・ご要望</span>
+          <button onClick={() => setIsFeedbackModalOpen(true)} className="button-secondary">フォームを開く</button>
+        </div>
       </div>
       <Modal title="お問い合わせ・要望" onClose={() => setIsFeedbackModalOpen(false)} isOpen={isFeedbackModalOpen}>
         <FeedbackForm onClose={() => setIsFeedbackModalOpen(false)} />

@@ -104,3 +104,30 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.profile-info {
+  margin-left: 20px;
+}
+
+.profile-info-item {
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 0;
+  margin: 0;
+}
+
+.profile-info-item:last-child {
+  border-bottom: none;
+}
+
+.profile-info-item p {
+  margin: 0;
+  padding: 5px 0;
+}
+
+.display-settings-content {
+  margin-left: 20px;
+}
+
+.other-settings-content {
+  margin-left: 20px;
+}

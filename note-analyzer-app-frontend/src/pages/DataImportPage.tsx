@@ -11,9 +11,6 @@ export const DataImportPage: React.FC<DataImportPageProps> = ({ setCurrentPage }
   const {
     handleExtractAndAddArticles,
     handleFileUpload,
-    handleFetchXData,
-    isFetchingXData,
-    isXConnected,
   } = useData();
 
   const [notePastedText, setNotePastedText] = useState("");
@@ -68,26 +65,7 @@ export const DataImportPage: React.FC<DataImportPageProps> = ({ setCurrentPage }
           </div>
         </section>
 
-        <hr className="section-divider" />
 
-        <section className="import-section">
-          <h2>X (Twitter) と連携</h2>
-          <div className="import-content" style={{ paddingLeft: '20px' }}>
-            <p>Xと連携することで、note記事のインプレッションなどを自動で取得できます。</p>
-            <div style={{ marginTop: '10px' }}>
-                {isXConnected ? (
-                  <p>✅ Xアカウントは連携済みです。</p>
-                ) : (
-                  <button className="button-secondary">Xアカウントと連携</button>
-                )}
-            </div>
-            <div style={{ marginTop: '10px' }}>
-                <button onClick={handleFetchXData} disabled={isFetchingXData} className="button-secondary">
-                  {isFetchingXData ? "取得中..." : "速報値を今すぐ取得"}
-                </button>
-            </div>
-          </div>
-        </section>
 
         <hr className="section-divider" />
 
