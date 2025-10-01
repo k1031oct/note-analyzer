@@ -84,6 +84,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = React.memo(({ setCurr
         kpis,
         startDate,
         endDate,
+        setStartDate,
+        setEndDate,
         lineChartData,
         categoryTotalData,
         secondaryCategoryArticleCountData,
@@ -245,7 +247,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = React.memo(({ setCurr
 
     return (
         <div className="card" style={{ textAlign: 'left' }}>
-            <h2 style={{ fontSize: '20px', marginBottom: '10px' }}>ダッシュボード ({startDate} 〜 {endDate})</h2>
+            <h2 style={{ fontSize: '20px', marginBottom: '10px' }}>ダッシュボード</h2>
+            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', alignItems: 'center' }}>
+                <div>
+                    <label htmlFor="startDate" style={{ marginRight: '10px' }}>開始日:</label>
+                    <input type="date" id="startDate" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                </div>
+                <div>
+                    <label htmlFor="endDate" style={{ marginRight: '10px' }}>終了日:</label>
+                    <input type="date" id="endDate" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                </div>
+            </div>
             
             <CollapsibleSection title="KPI評価" isVisible={isKpiVisible} onToggle={() => setIsKpiVisible(!isKpiVisible)}>
                 {kpiTable}

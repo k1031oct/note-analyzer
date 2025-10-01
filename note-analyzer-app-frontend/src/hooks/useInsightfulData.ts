@@ -67,27 +67,35 @@ export const useInsightfulData = (
         calculateSpikes(lineChartData, 'Xいいね');
 
         const dashboardArticles = filteredArticlesByClassification.map(article => {
-            const endSnapshots = article.daily_snapshots.filter(s => s.id <= endDate);
+            const endSnapshots = article.daily_snapshots.filter(s => s.id <= endDate && s.note_data);
             const endSnapshot = endSnapshots.length > 0 ? endSnapshots[endSnapshots.length - 1] : null;
 
-            const startSnapshots = article.daily_snapshots.filter(s => s.id < startDate);
+            const startSnapshots = article.daily_snapshots.filter(s => s.id < startDate && s.note_data);
             const startSnapshot = startSnapshots.length > 0 ? startSnapshots[startSnapshots.length - 1] : null;
 
             const endViews = endSnapshot?.note_data?.views ?? 0;
             const endLikes = endSnapshot?.note_data?.likes ?? 0;
             const endComments = endSnapshot?.note_data?.comments ?? 0;
-            const endXImpressions = endSnapshot?.x_confirmed_data?.impressions ?? endSnapshot?.x_preliminary_data?.impressions ?? 0;
-            const endXLikes = endSnapshot?.x_confirmed_data?.likes ?? endSnapshot?.x_preliminary_data?.likes ?? 0;
 
             const startViews = startSnapshot?.note_data?.views ?? 0;
             const startLikes = startSnapshot?.note_data?.likes ?? 0;
             const startComments = startSnapshot?.note_data?.comments ?? 0;
-            const startXImpressions = startSnapshot?.x_confirmed_data?.impressions ?? startSnapshot?.x_preliminary_data?.impressions ?? 0;
-            const startXLikes = startSnapshot?.x_confirmed_data?.likes ?? startSnapshot?.x_preliminary_data?.likes ?? 0;
 
             const viewsDelta = endViews - startViews;
             const likesDelta = endLikes - startLikes;
             const commentsDelta = endComments - startComments;
+
+            const endSnapshotsX = article.daily_snapshots.filter(s => s.id <= endDate);
+            const endSnapshotX = endSnapshotsX.length > 0 ? endSnapshotsX[endSnapshotsX.length - 1] : null;
+            const startSnapshotsX = article.daily_snapshots.filter(s => s.id < startDate);
+            const startSnapshotX = startSnapshotsX.length > 0 ? startSnapshotsX[startSnapshotsX.length - 1] : null;
+
+            const endXImpressions = endSnapshotX?.x_confirmed_data?.impressions ?? endSnapshotX?.x_preliminary_data?.impressions ?? 0;
+            const endXLikes = endSnapshotX?.x_confirmed_data?.likes ?? endSnapshotX?.x_preliminary_data?.likes ?? 0;
+
+            const startXImpressions = startSnapshotX?.x_confirmed_data?.impressions ?? startSnapshotX?.x_preliminary_data?.impressions ?? 0;
+            const startXLikes = startSnapshotX?.x_confirmed_data?.likes ?? startSnapshotX?.x_preliminary_data?.likes ?? 0;
+
             const xImpressionsDelta = endXImpressions - startXImpressions;
             const xLikesDelta = endXLikes - startXLikes;
 

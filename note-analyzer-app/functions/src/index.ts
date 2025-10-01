@@ -44,7 +44,28 @@ export const onCsvUpload = onObjectFinalized(async (event) => {
     return;
   }
 
-  const headers = Object.keys(records[0] || {});
+  const headerMapping: { [key: string]: string } = {
+    "Tweet text": "ポスト本文",
+    "Post text": "ポスト本文",
+    "Date": "日付",
+    "Impressions": "インプレッション数",
+    "Likes": "いいね",
+    "Engagements": "エンゲージメント",
+  };
+
+  const processedRecords = records.map((record: any) => {
+    const newRecord: { [key: string]: any } = {};
+    for (const key in record) {
+      if (headerMapping[key]) {
+        newRecord[headerMapping[key]] = record[key];
+      } else {
+        newRecord[key] = record[key];
+      }
+    }
+    return newRecord;
+  });
+
+  const headers = Object.keys(processedRecords[0] || {});
   const expectedHeaders = ["ポスト本文", "日付", "インプレッション数", "いいね", "エンゲージメント"];
   const missingHeaders = expectedHeaders.filter((h) => !headers.includes(h));
   if (missingHeaders.length > 0) {
@@ -69,7 +90,7 @@ export const onCsvUpload = onObjectFinalized(async (event) => {
     }
 
     const dailyMetrics = new Map();
-    for (const record of records) {
+    for (const record of processedRecords) {
       const postText = (record as any)["ポスト本文"];
       const recordDate = (record as any)["日付"];
       if (postText && postText.includes(articleUrl) && recordDate) {
