@@ -186,6 +186,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = React.memo(({ setCurr
                                 scope.note_data.views += article.note_views_change ?? 0;
                                 scope.note_data.likes += article.note_likes_change ?? 0;
                                 scope.note_data.comments += article.note_comments_change ?? 0;
+                                scope.x_preliminary_data.impressions += (article as any).x_impressions_change ?? 0;
+                                scope.x_preliminary_data.likes += (article as any).x_likes_change ?? 0;
                                 return scope;
                             }, { note_data: { views: 0, likes: 0, comments: 0 }, x_preliminary_data: { impressions: 0, likes: 0, replies: 0, retweets: 0, quotes: 0 }, x_confirmed_data: { impressions: 0, likes: 0, engagements: 0 } });
                             let overallResult: string | number | boolean = 'N/A';
